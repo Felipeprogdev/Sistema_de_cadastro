@@ -473,6 +473,9 @@ def deletar_dados_pelo_id(janela_1, largura_janela, altura_janela):
         classe.deletar_dados(id_digitado)
         tabela(janela_1, largura_janela, altura_janela, numero=1, resetabela=False)
 
+        # Atualiza o texto do label 'pagina'
+        pagina.config(text="1")
+
     Label(frame_deletar,
          text="Deletar dados",
          bg='#4c8fde').place(relx=0.5, rely=0, anchor='n')
@@ -603,6 +606,10 @@ def editar_dados(janela_1, largura_janela, altura_janela):
         classe.editar_dados(id_digitado, nome_digitado, email_digitado, data_digitada)
 
         tabela(janela_1, largura_janela, altura_janela, numero=1, resetabela=False)
+
+        # Atualiza o texto do label 'pagina'
+        pagina.config(text="1")
+
 
     Button(frame_editar,
            text="Editar",
