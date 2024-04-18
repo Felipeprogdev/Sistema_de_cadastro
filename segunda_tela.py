@@ -5,6 +5,34 @@ from datetime import datetime
 from main import primeira_tela
 
 
+def formatar_nome():
+    nome_na_caixa_de_texto = caixa_nome.get().capitalize()
+    if caixa_nome.get() == '':
+        nome_na_caixa_de_texto = None
+    return nome_na_caixa_de_texto
+
+
+def formatar_email():
+    email_na_caixa_de_texto = caixa_email.get().lower()
+    if caixa_email.get() == '':
+        email_na_caixa_de_texto = None
+    return email_na_caixa_de_texto
+
+
+def formatar_data():
+    data_na_caixa_de_texto = data.get()
+    if data.get() == '':
+        data_na_caixa_de_texto = None
+    else:
+        data_na_caixa_de_texto = data_na_caixa_de_texto.replace('/', '-')
+        a = data_na_caixa_de_texto[0:2]
+        b = data_na_caixa_de_texto[6:10]
+        teste = b + data_na_caixa_de_texto[2:6] + a
+        data_na_caixa_de_texto = teste
+
+    return data_na_caixa_de_texto
+
+
 def create_label(frame, text, x, y, width, height, bg='#4c8fde'):
     label = Label(frame, text=text, bg=bg)
     label.place(x=x, y=y, width=width, height=height)
@@ -12,8 +40,6 @@ def create_label(frame, text, x, y, width, height, bg='#4c8fde'):
 
 
 def botao_de_fechar(janela_1, frame):
-
-    # Adicionando o botão ao frame
     botao_fechar = Button(frame,
                           text="X",
                           bg='red',
@@ -24,7 +50,6 @@ def botao_de_fechar(janela_1, frame):
 
 
 def botao_de_minimizar(janela_1, frame):
-    # Adicionando o botão ao frame
     botao_minimizar = Button(frame,
                              text="-",
                              command=janela_1.iconify)
@@ -33,29 +58,114 @@ def botao_de_minimizar(janela_1, frame):
                          anchor="nw")  # Posiciona o botão no canto superior direito do
 
 
+def abrir_outra_janela(janela_1):
+    janela_1.destroy()
+    primeira_tela.tela1()
+
+
 def botao_de_voltar(janela_1, frame):
-    def abrir_outra_janela():
-        janela_1.destroy()
-        primeira_tela.tela1()
-
-    # Adicionando o botão ao frame
     botao_voltar = Button(frame,
-                          text="Voltar",  # Texto que remete a voltar
-                          command=lambda: abrir_outra_janela())  # Ação ao clicar
+                          text="Voltar",
+                          command=lambda: abrir_outra_janela(janela_1))  # Passando janela_1 como argumento
+    botao_voltar.pack(side="left", anchor="nw")
 
-    botao_voltar.pack(side="left",  # Posiciona o botão no canto superior esquerdo
-                      anchor="nw")
+
+def pesquisar(janela_1, largura_janela, altura_janela):
+    tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=True)
+
+    # Atualiza o texto do label 'pagina'
+    pagina.config(text="1")
+
+
+def botao_de_pesquisar(frame, janela_1, largura_frame,
+                       altura_frame, largura_botao,
+                       altura_botao, largura_janela, altura_janela):
+    # Calculando as coordenadas x e y para centralizar o botão no frame
+    x_botao = (largura_frame - largura_botao) / 2
+    y_botao = (altura_frame - altura_botao) / 1.5
+
+    # Criando um botão
+    botao_de_pesquisa = Button(frame,
+                               text="Pesquisar",
+                               bg='#ffffca',
+                               command=lambda: pesquisar(janela_1, largura_janela, altura_janela))
+    # Posicionando e dimensionando o botão dentro do frame
+    botao_de_pesquisa.place(x=x_botao,
+                            y=y_botao,
+                            width=largura_botao,
+                            height=altura_botao)
+
+
+def frame_de_pesquisa(janela_1, largura_janela, altura_janela):
+    largura_frame = largura_janela * 1  # 100% da largura da janela
+    altura_frame = altura_janela * 0.2  # 20% da altura da janela
+
+    x = (largura_janela - largura_frame) / 2  # Centralizado na largura
+    y = 0  # No topo da janela
+
+    frame = Frame(janela_1, bg='#4c8fde',
+                  borderwidth=1)
+
+    frame.place(x=x,
+                y=y,
+                width=largura_frame,
+                height=altura_frame)
+
+    botao_de_fechar(janela_1, frame)
+
+    botao_de_minimizar(janela_1, frame)
+
+    botao_de_voltar(janela_1, frame)
+
+    # Definindo a largura e a altura do botão como uma porcentagem da largura e altura do frame
+    largura_botao = largura_frame * 0.1  # 10% da largura do frame
+    altura_botao = altura_frame * 0.2  # 20% da altura do frame
+
+    botao_de_pesquisar(frame, janela_1, largura_frame,
+                       altura_frame, largura_botao, altura_botao,
+                       largura_janela, altura_janela)
+
+    # Definindo a largura e a altura do label como uma porcentagem da largura e altura do frame
+    largura_label = largura_frame * 0.1  # 1% da largura do frame
+    altura_label = altura_frame * 0.15  # 10.5% da altura do frame
+
+    pesquisa_id(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao)
+
+    x_label_id = (largura_frame - largura_botao) / 3.58
+    y_label_id = (altura_frame - altura_botao) / 10
+
+    create_label(frame, 'Id:', x_label_id, y_label_id, largura_label, altura_label)
+
+    pesquisa_nome(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao)
+
+    x_label_nome = (largura_frame - largura_botao) / 2.29
+    y_label_nome = (altura_frame - altura_botao) / 10
+
+    create_label(frame, 'Nome:', x_label_nome, y_label_nome, largura_label, altura_label)
+
+    pesquisa_email(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao)
+
+    x_label_email = largura_frame - (largura_frame - largura_botao) / 1.9
+    y_label_email = (altura_frame - altura_botao) / 10
+
+    create_label(frame, 'email:', x_label_email, y_label_email, largura_label, altura_label)
+
+    pesquisa_data(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao)
+
+    x_label_data = largura_frame - (largura_frame - largura_botao) / 2.7
+    y_label_data = (altura_frame - altura_botao) / 10
+
+    create_label(frame, 'Data:', x_label_data, y_label_data, largura_label, altura_label)
 
 
 # numero é a variavel que define que o programa deve chamar o banco para carregar
 # inicio é a pagina que o banco ira procurar e multiplicar por 21 para colocar na tela
-# resetable é para limpar a tabela
-def tabela(janela_1, largura_janela, altura_janela, numero=0, inicio=0, resetabela=False,
-           _id=None, _nome=None, _email=None, _data=None, colocar_dados=True):
+# resetb é para limpar a tabela
+def tabela(janela_1, largura_janela, altura_janela, numero=0, inicio=0, resetb=False):
 
     # Definindo a posição e o tamanho do frame com base no tamanho da janela
-    x = largura_janela * 0.2  # 10% da largura da janela
-    y = altura_janela * 0.2  # 10% da altura da janela
+    x = largura_janela * 0.2  # 20% da largura da janela
+    y = altura_janela * 0.2  # 20% da altura da janela
     largura_frame = largura_janela * 0.6  # 60% da largura da janela
     altura_frame = altura_janela * 0.6  # 60% da altura da janela
 
@@ -81,18 +191,29 @@ def tabela(janela_1, largura_janela, altura_janela, numero=0, inicio=0, resetabe
     tabel.heading('email', text='Email')
     tabel.heading('data de nascimento', text='Data de Nascimento')
 
-    if resetabela == True:
+    if resetb:
         tabel.delete()
+
+    if caixa_id.get() == '':
+        id_na_caixa_de_texto = None
+    else:
+        id_na_caixa_de_texto = int(caixa_id.get())
+
+    nome_na_caixa_de_texto = formatar_nome()
+
+    email_na_caixa_de_texto = formatar_email()
+
+    data_na_caixa_de_texto = formatar_data()
 
     if numero == 1:
         # Cria uma nova instância da classe Banco
         classe = Banco()
         # Adiciona os dados de uma nova pessoa ao banco de dados
-        classe.carregar_dados(tabel, inicio, variavel_id=_id, variavel_nome=_nome,
-                              variavel_email=_email, variavel_data=_data)
-
-        if colocar_dados == True:
-            tabel.pack(fill=BOTH, expand=1)  # Adiciona a tabela ao frame
+        classe.carregar_dados(tabel, inicio=inicio, variavel_id=id_na_caixa_de_texto,
+                              variavel_nome=nome_na_caixa_de_texto,
+                              variavel_email=email_na_caixa_de_texto,
+                              variavel_data=data_na_caixa_de_texto)
+        tabel.pack(fill=BOTH, expand=1)  # Adiciona a tabela ao frame
 
     # Obtém uma lista de todos os itens na tabela
     itens = tabel.get_children()
@@ -106,210 +227,124 @@ def tabela(janela_1, largura_janela, altura_janela, numero=0, inicio=0, resetabe
         # Obtém o ID do último item
         ultimo_id = tabel.item(ultimo_item, 'values')[0]
 
-        # Abre o arquivo no modo de escrita ('w')
-        with open("variaveis.txt", "w") as arquivo:
-            # Escreve cada variável em uma linha diferente
-            arquivo.write((_id if _id is not None else '') + "\n")
-            arquivo.write((_nome if _nome is not None else '') + "\n")
-            arquivo.write((_email if _email is not None else '') + "\n")
-            arquivo.write((str(_data) if _data is not None else '') + '\n')
-            arquivo.write(str(ultimo_id))  # Escreve o último ID da tabela
-
-            # Fecha o arquivo
-            arquivo.close()
+        global ultimo_id_da_tabela
+        ultimo_id_da_tabela = ultimo_id
 
 
-def botao_de_pesquisar(frame, largura_frame, altura_frame, largura_botao, altura_botao, pesquisar):
-    # Calculando as coordenadas x e y para centralizar o botão no frame
-    x_botao = (largura_frame - largura_botao) / 2
-    y_botao = (altura_frame - altura_botao) / 1.5
+def adicionar_barra(event, data_acessada):
+    if event.keysym in ['Left', 'Right', 'Up', 'Down']:
+        return
 
-    # Criando um botão
-    botao_de_pesquisa = Button(frame,
-                               text="Pesquisar",
-                               bg='#ffffca',
-                               command=pesquisar)
-    # Posicionando e dimensionando o botão dentro do frame
-    botao_de_pesquisa.place(x=x_botao,
-                            y=y_botao,
-                            width=largura_botao,
-                            height=altura_botao)
+    # Verifica se o caractere digitado é um número, uma barra ou backspace
+    elif event.char.isdigit() or event.char == '/' or event.char == '\x08':
+        # Pega valor digitado
+        entrada = data_acessada.get()
 
+        # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
+        if len(entrada) < 10 or event.char == '\x08':
+            # Se for um backspace não adicione a /
 
-def botoes_caixas_de_texto_de_pesquisa(janela_1, largura_janela, altura_janela):
-    # Definindo a largura e a altura do frame
-    largura_frame = largura_janela * 1  # 100% da largura da janela
-    altura_frame = altura_janela * 0.2  # 10% da altura da janela
+            if event.char != '\x08':
+                if len(entrada) == 4 and int(event.char) >= 3:
+                    # Limpa a caixa de texto
+                    data_acessada.delete(0, END)
+                    data_acessada.insert(END, entrada[0])
+                    data_acessada.insert(END, entrada[1])
+                    data_acessada.insert(END, entrada[2])
+                    data_acessada.insert(END, entrada[3])
+                    return 'break'
 
-    # Definindo a posição do frame
-    x = (largura_janela - largura_frame) / 2  # Centralizado na largura
-    y = 0  # No topo da janela
+                if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
+                    # Limpa a caixa de texto
+                    data_acessada.delete(0, END)
+                    # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
+                    data_acessada.insert(END, '0')
+                    data_acessada.insert(END, entrada[0])
+                    data_acessada.insert(END, '/')
+                    data_acessada.insert(END, '0')
+                    data_acessada.insert(END, event.char)
+                    data_acessada.insert(END, '/')
+                    return 'break'
 
-    frame = Frame(janela_1, bg='#4c8fde',
-                  borderwidth=1)
+                if (
+                        len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
+                        (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
+                        (event.char) >= 2 and int(event.char) <= 9
+                ):
+                    data_acessada.insert(END, '0')
+                    data_acessada.insert(END, event.char)
+                    data_acessada.insert(END, '/')
+                    return 'break'
 
-    frame.place(x=x,
-                y=y,
-                width=largura_frame,
-                height=altura_frame)
-
-    def adicionar_barra(event):
-        # Verifica se o caractere digitado é um número, uma barra ou backspace e formata tudo
-        if event.char.isdigit() or event.char == '/' or event.char == '\x08':
-            # Pega valor digitado
-            entrada = data.get()
-
-            # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
-            if len(entrada) < 10 or event.char == '\x08':
-                # Se for um backspace não adicione a /
-
-                if event.char != '\x08':
-                    if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
-                        # Limpa a caixa de texto
-                        data.delete(0, END)
-                        # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
-                        data.insert(END, '0')
-                        data.insert(END, entrada[0])
-                        data.insert(END, '/')
-                        data.insert(END, '0')
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
-
-                    if (
-                            len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
-                            (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
-                            (event.char) >= 2 and int(event.char) <= 9
-                    ):
-                        data.insert(END, '0')
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
-
-                    if len(entrada) == 1 or len(entrada) == 4:
-                        '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
-                        primeiros, exceto se o caractere for backspace'''
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
-
-            else:
-                # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-                return 'break'
+                if len(entrada) == 1 or len(entrada) == 4:
+                    '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
+                    primeiros, exceto se o caractere for backspace'''
+                    data_acessada.insert(END, event.char)
+                    data_acessada.insert(END, '/')
+                    return 'break'
 
         else:
             # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
             return 'break'
 
-    def pesquisar():
-        id_digitado = caixa_id.get() if caixa_id.get() else None
-        nome_digitado = caixa_nome.get().capitalize() if caixa_nome.get() else None
-        email_digitado = caixa_email.get() if caixa_email.get() else None
-        # Verifica se data_digitada_str não é None
-        if data.get() and len(data.get()) == 10:
-            # Converte a string para um objeto de data
-            data_digitada = datetime.strptime(data.get(), '%d/%m/%Y').date()
-        else:
-            data_digitada = None
+    else:
+        # Se o caractere não for um número, uma barra, backspace ou uma tecla de seta, não o insere na caixa de texto
+        return 'break'
 
-        tabela(janela_1, largura_janela, altura_janela, numero=1, resetabela=True,
-               _id=id_digitado, _nome=nome_digitado, _email=email_digitado, _data=data_digitada)
 
-        # O resto do seu código aqui...
-
-        # Atualiza o texto do label 'pagina'
-        pagina.config(text="1")
-
-    botao_de_fechar(janela_1, frame)
-
-    botao_de_minimizar(janela_1, frame)
-
-    botao_de_voltar(janela_1, frame)
-
-    # Definindo a largura e a altura do botão como uma porcentagem da largura e altura do frame
-    largura_botao = largura_frame * 0.1  # 20% da largura do frame
-    altura_botao = altura_frame * 0.2  # 20% da altura do frame
-
-    botao_de_pesquisar(frame, largura_frame, altura_frame, largura_botao, altura_botao, pesquisar)
-
-    # Definindo a largura e a altura do botão como uma porcentagem da largura e altura do frame
-    largura_nome = largura_frame * 0.1  # 20% da largura do frame
-    altura_nome = altura_frame * 0.15  # 20% da altura do frame
+def pesquisa_id(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
 
     # Calculando as coordenadas x e y para centralizar o botão no frame
     x_id = (largura_frame - largura_botao) / 3.6
     y_id = (altura_frame - altura_botao) / 3
 
-    # Cria a caixa de texto
+    global caixa_id
     caixa_id = Entry(frame)
-    # Caixa de texto do nome
     caixa_id.place(x=x_id,
                    y=y_id,
-                   width=largura_nome,
-                   height=altura_nome
+                   width=largura_label,
+                   height=altura_label
                    )
 
-    # Calculando as coordenadas x e y para centralizar o botão no frame
-    x_label_id = (largura_frame - largura_botao) / 3.58
-    y_label_id = (altura_frame - altura_botao) / 10
 
-    create_label(frame, 'Id:', x_label_id, y_label_id, largura_nome, altura_nome)
-
+def pesquisa_nome(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
     # Calculando as coordenadas x e y para centralizar o botão no frame
     x_nome = (largura_frame - largura_botao) / 2.3
     y_nome = (altura_frame - altura_botao) / 3
 
-    # Cria a caixa de texto
+    global caixa_nome
     caixa_nome = Entry(frame)
-    # Caixa de texto do nome
     caixa_nome.place(x=x_nome,
-               y=y_nome,
-               width=largura_nome,
-               height=altura_nome)
+                     y=y_nome,
+                     width=largura_label,
+                     height=altura_label)
 
-    # Calculando as coordenadas x e y para centralizar o botão no frame
-    x_label_nome = (largura_frame - largura_botao) / 2.29
-    y_label_nome = (altura_frame - altura_botao) / 10
 
-    create_label(frame, 'Nome:', x_label_nome, y_label_nome, largura_nome, altura_nome)
-
+def pesquisa_email(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
     # Calculando as coordenadas x e y para centralizar o botão no frame
     x_email = largura_frame - (largura_frame - largura_botao) / 1.9
     y_email = (altura_frame - altura_botao) / 3
 
-    # Cria a caixa de texto do email
+    global caixa_email
     caixa_email = Entry(frame)
-    # Caixa de texto do email
     caixa_email.place(x=x_email,
                       y=y_email,
-                      width=largura_nome,
-                      height=altura_nome
+                      width=largura_label,
+                      height=altura_label
                       )
 
-    # Calculando as coordenadas x e y para centralizar o botão no frame
-    x_label_email = largura_frame - (largura_frame - largura_botao) / 1.9
-    y_label_email = (altura_frame - altura_botao) / 10
 
-    create_label(frame, 'email:', x_label_email, y_label_email, largura_nome, altura_nome)
-
+def pesquisa_data(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
     # Calculando as coordenadas x e y para centralizar o botão no frame
     x_data = largura_frame - (largura_frame - largura_botao) / 2.7
     y_data = (altura_frame - altura_botao) / 3
-
-    # Cria a caixa de texto
+    global data
     data = Entry(frame)
-    # Caixa de texto do nome
     data.place(x=x_data,
                y=y_data,
-               width=largura_nome,
-               height=altura_nome)
-    data.bind('<Key>', adicionar_barra)
-
-    # Calculando as coordenadas x e y para centralizar o botão no frame
-    x_label_data = largura_frame - (largura_frame - largura_botao) / 2.7
-    y_label_data = (altura_frame - altura_botao) / 10
-
-    create_label(frame, 'Data:', x_label_data, y_label_data, largura_nome, altura_nome)
+               width=largura_label,
+               height=altura_label)
+    data.bind('<Key>', lambda event: adicionar_barra(event, data))
 
 
 def cor_de_fundo_e_icone(janela_1):
@@ -326,125 +361,82 @@ def tamanho_da_janela(janela_1):
     janela_1.resizable(False, False)
 
 
+def pagina(frame_paginacao):
+    # Adiciona um label ao frame
+    global pagina
+    pagina = Label(frame_paginacao, text="1", bg='#4c8fde')
+    pagina.place(relx=0.5, rely=0.5, anchor='center')
+
+
+def proxima_pagina(janela_1, largura_janela, altura_janela):
+
+    nome_na_caixa_de_texto = formatar_nome()
+
+    email_na_caixa_de_texto = formatar_email()
+
+    data_na_caixa_de_texto = formatar_data()
+
+    classe = Banco()
+    ultimo_id = classe.obter_ultimo_id(nome=nome_na_caixa_de_texto,
+                                       email=email_na_caixa_de_texto, data=data_na_caixa_de_texto)
+
+    if int(ultimo_id_da_tabela) == int(ultimo_id):
+        pass
+
+    else:
+
+        numero_pagina = int(pagina.cget('text'))
+
+        tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetb=True)
+
+        numero_pagina += 1
+
+        # Altera o texto do label
+        pagina.config(text=str(numero_pagina))
+
+
+def pagina_anterior(janela_1, largura_janela, altura_janela):
+
+    if int(pagina.cget('text')) == 1:
+        pass
+
+    else:
+        numero_pagina = int(pagina.cget('text'))
+
+        numero_pagina -= 2
+
+        tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetb=True)
+
+        numero_pagina += 1
+        pagina_str = numero_pagina
+        pagina.config(text=pagina_str)
+
+
 def paginacao_da_tabela(janela_1, largura_janela, altura_janela):
     # Definindo a posição e o tamanho do frame com base no tamanho da janela
-    x = largura_janela * 0.2  # 10% da largura da janela
+    x = largura_janela * 0.2  # 20% da largura da janela
     y = altura_janela * 0.8  # 80% da altura da janela
     largura_frame = largura_janela * 0.6  # 60% da largura da janela
     altura_frame = altura_janela * 0.1  # 10% da altura da janela
 
-    frame_tabela = Frame(janela_1,
-                         bg='#4c8fde',
-                         borderwidth=1)
-    frame_tabela.place(x=x,
-                       y=y,
-                       width=largura_frame,
-                       height=altura_frame)
+    frame_paginacao = Frame(janela_1,
+                            bg='#4c8fde',
+                            borderwidth=1)
+    frame_paginacao.place(x=x,
+                          y=y,
+                          width=largura_frame,
+                          height=altura_frame)
 
-    # Adiciona um label ao frame
-    global pagina
-    pagina = Label(frame_tabela, text="1", bg='#4c8fde')
-    pagina.place(relx=0.5, rely=0.5, anchor='center')
+    pagina(frame_paginacao)
 
-
-
-
-    def proxima():
-        # Abre o arquivo no modo de leitura ('r')
-        with open("variaveis.txt", "r") as arquivo:
-            # Lê cada linha e remove o caractere de nova linha no final
-            id_digitado = arquivo.readline().strip()
-            nome_digitado = arquivo.readline().strip()
-            email_digitado = arquivo.readline().strip()
-            data_digitada = arquivo.readline().strip()
-            id_final_da_tabela = int(arquivo.readline().strip())
-            arquivo.close()
-
-        # Se a linha estiver vazia, atribui None à variável
-        id_digitado = None if id_digitado == '' else id_digitado
-        if id_digitado is not None:
-            id_digitado = int(id_digitado)
-        nome_digitado = None if nome_digitado == '' else nome_digitado
-        email_digitado = None if email_digitado == '' else email_digitado
-        data_digitada = None if data_digitada == '' else data_digitada
-        # Se a linha estiver vazia, atribui None à variável
-        data_digitada = None if data_digitada == '' else data_digitada
-        # Se data_digitada não é None, converte para datetime
-        if data_digitada is not None:
-            data_digitada = datetime.strptime(data_digitada, '%Y-%m-%d')
-            data_digitada = data_digitada.strftime('%Y-%m-%d')
-
-        classe = Banco()
-        ultimo_id = classe.obter_ultimo_id(nome=nome_digitado, email=email_digitado, data=data_digitada)
-
-        if id_digitado != None:
-            pass
-
-        else:
-            if int(id_final_da_tabela) == ultimo_id:
-                pass
-
-            else:
-                numero_pagina = int(pagina.cget('text'))
-
-                tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetabela=True,
-                       _id=id_digitado, _nome=nome_digitado, _email=email_digitado, _data=data_digitada)
-
-
-                numero_pagina += 1
-
-                # Altera o texto do label
-                pagina.config(text=str(numero_pagina))
-
-    def anterior():
-        # Abre o arquivo no modo de leitura ('r')
-        with open("variaveis.txt", "r") as arquivo:
-            # Lê cada linha e remove o caractere de nova linha no final
-            id_digitado = arquivo.readline().strip()
-            nome_digitado = arquivo.readline().strip()
-            email_digitado = arquivo.readline().strip()
-            data_digitada = arquivo.readline().strip()
-            arquivo.close()
-
-        # Se a linha estiver vazia, atribui None à variável
-        id_digitado = None if id_digitado == '' else id_digitado
-        if id_digitado is not None:
-            id_digitado = int(id_digitado)
-        nome_digitado = None if nome_digitado == '' else nome_digitado
-        email_digitado = None if email_digitado == '' else email_digitado
-        data_digitada = None if data_digitada == '' else data_digitada
-        # Se a linha estiver vazia, atribui None à variável
-        data_digitada = None if data_digitada == '' else data_digitada
-        # Se data_digitada não é None, converte para datetime
-        if data_digitada is not None:
-            data_digitada = datetime.strptime(data_digitada, '%Y-%m-%d')
-            data_digitada = data_digitada.strftime('%Y-%m-%d')
-
-        if int(pagina.cget('text')) == 1:
-            pass
-
-        else:
-            numero_pagina = int(pagina.cget('text'))
-
-            numero_pagina -= 2
-
-            tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetabela=True,
-                   _id=id_digitado, _nome=nome_digitado, _email=email_digitado, _data=data_digitada
-                   )
-
-
-
-            numero_pagina += 1
-            pagina_str = numero_pagina
-            # Altera o texto do label
-            pagina.config(text=pagina_str)
-
-    # Adiciona um botão à esquerda do label
-    botao_esquerda = Button(frame_tabela, text="<", bg='#ffffca', command=anterior)
+    botao_esquerda = Button(frame_paginacao, text="<", bg='#ffffca',
+                            command=lambda: pagina_anterior(janela_1,
+                                                            largura_janela, altura_janela))
     botao_esquerda.place(relx=0.4, rely=0.5, anchor='center')
 
-    # Adiciona um botão à direita do label
-    botao_direita = Button(frame_tabela, text=">", bg='#ffffca', command=proxima)
+    botao_direita = Button(frame_paginacao, text=">", bg='#ffffca',
+                           command=lambda: proxima_pagina(janela_1,
+                                                          largura_janela, altura_janela))
     botao_direita.place(relx=0.6, rely=0.5, anchor='center')
 
 
@@ -452,39 +444,37 @@ def deletar_dados_pelo_id(janela_1, largura_janela, altura_janela):
     # Definindo a posição e o tamanho do frame com base no tamanho da janela
     x = 0  # Inicia no canto esquerdo
     y = (altura_janela - (altura_janela * 0.4)) / 2  # Centraliza na vertical
-    largura_frame = largura_janela * 0.19  # 30% da largura da janela
+    largura_frame = largura_janela * 0.19  # 19% da largura da janela
     altura_frame = altura_janela * 0.4  # 40% da altura da janela
 
     frame_deletar = Frame(janela_1,
-                         bg='#4c8fde',
-                         borderwidth=1)
+                          bg='#4c8fde',
+                          borderwidth=1)
     frame_deletar.place(x=x,
-                       y=y,
-                       width=largura_frame,
-                       height=altura_frame)
+                        y=y,
+                        width=largura_frame,
+                        height=altura_frame)
 
     def deletar():
         id_digitado = id_entry.get()
 
-        if id_digitado == None or id_digitado == str:
+        if id_digitado == str:
             return
 
         classe = Banco()
         classe.deletar_dados(id_digitado)
-        tabela(janela_1, largura_janela, altura_janela, numero=1, resetabela=False)
+        tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=False)
 
-        # Atualiza o texto do label 'pagina'
         pagina.config(text="1")
 
     Label(frame_deletar,
-         text="Deletar dados",
-         bg='#4c8fde').place(relx=0.5, rely=0, anchor='n')
+          text="Deletar dados",
+          bg='#4c8fde').place(relx=0.5, rely=0, anchor='n')
 
     Label(frame_deletar,
           text="Digite seu Id",
           bg='#4c8fde').place(relx=0.5, rely=0.2, anchor='n')  # Ajuste a posição vertical conforme necessário
 
-    # Entry para o ID
     id_entry = Entry(frame_deletar)
     id_entry.place(relx=0.5, rely=0.4, anchor='n')  # Ajuste a posição vertical conforme necessário
 
@@ -495,53 +485,6 @@ def deletar_dados_pelo_id(janela_1, largura_janela, altura_janela):
 
 
 def editar_dados(janela_1, largura_janela, altura_janela):
-    def adicionar_barra(event):
-        # Verifica se o caractere digitado é um número, uma barra ou backspace e formata tudo
-        if event.char.isdigit() or event.char == '/' or event.char == '\x08':
-            # Pega valor digitado
-            entrada = data_text_box.get()
-
-            # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
-            if len(entrada) < 10 or event.char == '\x08':
-                # Se for um backspace não adicione a /
-
-                if event.char != '\x08':
-                    if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
-                        # Limpa a caixa de texto
-                        data_text_box.delete(0, END)
-                        # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
-                        data_text_box.insert(END, '0')
-                        data_text_box.insert(END, entrada[0])
-                        data_text_box.insert(END, '/')
-                        data_text_box.insert(END, '0')
-                        data_text_box.insert(END, event.char)
-                        data_text_box.insert(END, '/')
-                        return 'break'
-
-                    if (
-                            len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
-                            (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
-                            (event.char) >= 2 and int(event.char) <= 9
-                    ):
-                        data_text_box.insert(END, '0')
-                        data_text_box.insert(END, event.char)
-                        data_text_box.insert(END, '/')
-                        return 'break'
-
-                    if len(entrada) == 1 or len(entrada) == 4:
-                        '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
-                        primeiros, exceto se o caractere for backspace'''
-                        data_text_box.insert(END, event.char)
-                        data_text_box.insert(END, '/')
-                        return 'break'
-
-            else:
-                # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-                return 'break'
-
-        else:
-            # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-            return 'break'
 
     # Definindo a posição e o tamanho do frame com base no tamanho da janela
     largura_frame = largura_janela * 0.19  # 19% da largura da janela
@@ -589,7 +532,7 @@ def editar_dados(janela_1, largura_janela, altura_janela):
 
     data_text_box = Entry(frame_editar)
     data_text_box.place(relx=0.5, rely=0.9, anchor='center')
-    data_text_box.bind('<Key>', adicionar_barra)
+    data_text_box.bind('<Key>', lambda event: adicionar_barra(event, data_text_box))
 
     def editar():
         id_digitado = int(id_text_box.get())
@@ -605,11 +548,10 @@ def editar_dados(janela_1, largura_janela, altura_janela):
         classe = Banco()
         classe.editar_dados(id_digitado, nome_digitado, email_digitado, data_digitada)
 
-        tabela(janela_1, largura_janela, altura_janela, numero=1, resetabela=False)
+        tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=False)
 
         # Atualiza o texto do label 'pagina'
         pagina.config(text="1")
-
 
     Button(frame_editar,
            text="Editar",
@@ -631,12 +573,12 @@ def tela2():
     largura_janela = janela_1.winfo_screenwidth()
     altura_janela = janela_1.winfo_screenheight()
 
+    frame_de_pesquisa(janela_1, largura_janela, altura_janela)
+
     tabela(janela_1, largura_janela, altura_janela, numero=1)
 
     # Isso é para pegar os dados que irão passar na paginação, exemplo, a pessoa pesquisou nome x
     # a paginação ira se basear nesse nome x e ira paginar com ele
-    botoes_caixas_de_texto_de_pesquisa(janela_1, largura_janela, altura_janela)
-
     paginacao_da_tabela(janela_1, largura_janela, altura_janela)
 
     deletar_dados_pelo_id(janela_1, largura_janela, altura_janela)

@@ -8,8 +8,8 @@ class Banco:
     # Para utilizar os comandos sql
     cursor = banco.cursor()
 
-
-    def carregar_dados(self, tabel, inicio=0, variavel_id=None, variavel_nome=None, variavel_email=None, variavel_data=None):
+    def carregar_dados(self, tabel, inicio=0, variavel_id=None, variavel_nome=None,
+                       variavel_email=None, variavel_data=None):
         # Inicia a consulta SQL
         consulta_sql = "SELECT id, nome, email, data FROM dados WHERE 1=1"
 
@@ -38,7 +38,6 @@ class Banco:
         # Limita o número de linhas retornadas
         resultados = resultados[inicio:fim]
 
-
         # Processa cada linha individualmente
         for linha in resultados:
             id_linha, nome, email, data = linha
@@ -48,7 +47,6 @@ class Banco:
             data_formatada = data_obj.strftime('%d/%m/%Y')
             # Insere cada linha na tabela
             tabel.insert('', 'end', values=(id_linha, nome, email, data_formatada))
-
 
     def adicionar_dados(self,  __nome: str, __email: str, __data: datetime):
         # Converte o objeto datetime para uma string no formato 'YYYY-mm-dd'
@@ -79,10 +77,10 @@ class Banco:
             # Deletar dados no banco
             self.cursor.execute("DELETE from dados WHERE id = ?", (__id,))
             self.banco.commit()
-        except Exception as e:
-            print(f"Erro ao deletar dados: {e}")
-            # Aqui você pode adicionar qualquer código para lidar com o erro
+        except sqlite3.Error:
+            pass
 
+    # Obtem o ultimo id para paginação
     def obter_ultimo_id(self, nome=None, email=None, data=None):
         # Inicia a consulta SQL
         consulta_sql = "SELECT id FROM dados WHERE 1=1"

@@ -4,6 +4,7 @@ from datetime import datetime
 from PIL import Image, ImageTk
 from segunda_tela import tela2
 
+
 def cor_de_fundo_e_icone(janela_1):
     # Cor de fundo
     janela_1['bg'] = '#4c8fde'
@@ -31,59 +32,142 @@ def tamanho_da_janela(janela_1):
     janela_1.resizable(False, False)
 
 
-def cria_label_1(janela_1):
+def cria_label_digitar_dados(janela_1):
     # Adiciona o label 1
-    label_1 = Label(janela_1,
-                    bg='#4c8fde',
-                    text='Digite seus dados:',
-                    fg='white',
-                    font='Arial 20',
-                    width=20,
-                    height=3
-                    )
-    label_1.pack()
-
-
-def cria_label_2(janela_1):
-    # Adiciona o label 2
-    label_2 = Label(janela_1,
-                    text='Digite seu nome:',
-                    bg='#4c8fde',
-                    fg='white',
-                    font='Arial 20',
-                    width=20
-                    )
-    label_2.pack()
-
-
-def cria_label_3(janela_1):
-    # Adiciona o label 3
-    label_3 = Label(janela_1,
-                    text='Digite seu email:',
-                    bg='#4c8fde',
-                    fg='white',
-                    font='Arial 20',
-                    width=20
-                    )
-    label_3.pack()
-
-
-def cria_label_4(janela_1):
-    # Adiciona o label 4
-    label_4 = Label(janela_1,
-                    text='Digite sua data de nascimento:',
-                    bg='#4c8fde',
-                    fg='white',
-                    font='Arial 20',
-                    width=23
-                    )
-    label_4.pack()
+    label_digitar_dados = Label(janela_1,
+                                bg='#4c8fde',
+                                text='Digite seus dados:',
+                                fg='white',
+                                font='Arial 20',
+                                width=20,
+                                height=3
+                                )
+    label_digitar_dados.pack()
 
 
 def espaco(janela_1):
     # Adiciona um espaço entre a caixa de texto e o próximo objeto com a cor '#4c8fde'
     espac = Label(janela_1, text="", height=1, background='#4c8fde')
     espac.pack()
+
+
+def cria_label_nome(janela_1):
+    label_nome = Label(janela_1,
+                       text='Digite seu nome:',
+                       bg='#4c8fde',
+                       fg='white',
+                       font='Arial 20',
+                       width=20
+                       )
+    label_nome.pack()
+
+
+def nome_text_box(janela_1):
+    global nome
+    # Cria a caixa de texto
+    nome = Entry(janela_1,
+                 width=20)
+    # Caixa de texto do nome
+    nome.pack()
+
+
+def cria_label_email(janela_1):
+    label_email = Label(janela_1,
+                        text='Digite seu email:',
+                        bg='#4c8fde',
+                        fg='white',
+                        font='Arial 20',
+                        width=20
+                        )
+    label_email.pack()
+
+
+def email_text_box(janela_1):
+    global email
+    # Caixa de texto do email
+    email = Entry(janela_1,
+                  width=20)
+    # Adiciona a caixa de texto à janela
+    email.pack()
+
+
+def cria_label_data(janela_1):
+    label_data = Label(janela_1,
+                       text='Digite sua data de nascimento:',
+                       bg='#4c8fde',
+                       fg='white',
+                       font='Arial 20',
+                       width=23
+                       )
+    label_data.pack()
+
+
+def data_text_box(janela_1):
+    global data
+    # Caixa de texto da data
+    data = Entry(janela_1,
+                 width=20)
+    data.pack()
+    data.bind('<Key>', lambda event: adicionar_barra(event))
+
+
+def abrir_outra_janela(janela_1):
+    janela_1.destroy()
+    tela2()
+
+
+# Ocorre quando a pessoa clica no botão de adicionar dados
+def adicionar_dado():
+    mensagem_de_erro = 'Você digitou algo errado'
+    try:
+        if nome.get() == '' or email.get() == '':
+            label_erro.config(text=mensagem_de_erro)
+            return
+
+        # Pega valores digitados
+        nome_digitado = nome.get().capitalize()
+        email_digitado = email.get()
+        data_digitada = data.get()
+        # Converte a string para um objeto datetime
+        data_final = datetime.strptime(data_digitada, '%d/%m/%Y')
+
+        # Cria uma nova instância da classe banco
+        classe = Banco()
+
+        # Adiciona os dados de uma nova pessoa ao banco de dados
+        classe.adicionar_dados(nome_digitado, email_digitado, data_final)
+
+        # Atualiza a mensagem do label para 'Adicionado com sucesso'
+        label_erro.config(text='Adicionado com sucesso')
+    except ValueError:  # Captura todas as exceções como 'e'
+        # Atualiza a mensagem do label para 'Você digitou algo errado'
+        label_erro.config(text=mensagem_de_erro)
+
+
+def frame_com_botoes(janela_1):
+    # Criando um frame para conter os botões, com a cor de fundo desejada
+    frame = Frame(janela_1,
+                  bg='#4c8fde')
+    frame.pack()
+
+    # Adicionando o primeiro botão ao contêiner
+    adicionar = Button(frame,
+                       text="Adicionar",
+                       command=lambda: adicionar_dado(),
+                       bg='#ffffca',
+                       fg='black')
+    # Coloca o primeiro botão na tela, com um leve espaçamento à direita
+    adicionar.pack(side="left", padx=5)
+
+    # Adicionando o segundo botão ao contêiner
+    tabela = Button(frame,
+                    text="Ver tabela",
+                    command=lambda: abrir_outra_janela(janela_1),
+                    bg='#ffffca',
+                    fg='black')
+    # Coloca o segundo botão na tela, com um leve espaçamento à esquerda
+    tabela.pack(side="left",
+                padx=5)
 
 
 def cria_imagem(janela_1, largura_atual, altura_atual):
@@ -105,82 +189,69 @@ def cria_imagem(janela_1, largura_atual, altura_atual):
     rotulo.pack()
 
 
-def tela1():
-    def adicionar_dado():
+# Formatar a data de nascimento digitada
+def adicionar_barra(event):
+    if event.keysym in ['Left', 'Right', 'Up', 'Down']:
+        return
 
-        try:
-            # Pega valores digitados
-            nome_digitado = nome.get().capitalize()
-            email_digitado = email.get()
-            data_digitada = data.get()
-            # Converte a string para um objeto datetime
-            data_final = datetime.strptime(data_digitada, '%d/%m/%Y')
+    # Verifica se o caractere digitado é um número, uma barra ou backspace
+    elif event.char.isdigit() or event.char == '/' or event.char == '\x08':
+        # Pega valor digitado
+        entrada = data.get()
 
-            # Cria uma nova instância da classe banco
-            classe = Banco()
+        # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
+        if len(entrada) < 10 or event.char == '\x08':
+            # Se for um backspace não adicione a /
 
-            # Adiciona os dados de uma nova pessoa ao banco de dados
-            classe.adicionar_dados(nome_digitado, email_digitado, data_final)
+            if event.char != '\x08':
+                if len(entrada) == 4 and int(event.char) >= 3:
+                    # Limpa a caixa de texto
+                    data.delete(0, END)
+                    data.insert(END, entrada[0])
+                    data.insert(END, entrada[1])
+                    data.insert(END, entrada[2])
+                    data.insert(END, entrada[3])
+                    return 'break'
 
-            # Atualiza a mensagem do label para 'Adicionado com sucesso'
-            label_erro.config(text='Adicionado com sucesso')
-        except Exception as e:  # Captura todas as exceções como 'e'
-            # Atualiza a mensagem do label para 'Você digitou algo errado'
-            label_erro.config(text='Você digitou algo errado')
+                if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
+                    # Limpa a caixa de texto
+                    data.delete(0, END)
+                    # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
+                    data.insert(END, '0')
+                    data.insert(END, entrada[0])
+                    data.insert(END, '/')
+                    data.insert(END, '0')
+                    data.insert(END, event.char)
+                    data.insert(END, '/')
+                    return 'break'
 
-    # formatar a data de nascimento digitada
-    def adicionar_barra(event):
-        # Verifica se o caractere digitado é um número, uma barra ou backspace
-
-        if event.char.isdigit() or event.char == '/' or event.char == '\x08':
-            # Pega valor digitado
-            entrada = data.get()
-
-            # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
-            if len(entrada) < 10 or event.char == '\x08':
-                # Se for um backspace não adicione a /
-
-                if event.char != '\x08':
-                    if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
-                        # Limpa a caixa de texto
-                        data.delete(0, END)
-                        # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
-                        data.insert(END, '0')
-                        data.insert(END, entrada[0])
-                        data.insert(END, '/')
-                        data.insert(END, '0')
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
-
-                    if (
-                            len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
+                if (
+                        len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
                         (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
                         (event.char) >= 2 and int(event.char) <= 9
-                    ):
-                        data.insert(END, '0')
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
+                ):
+                    data.insert(END, '0')
+                    data.insert(END, event.char)
+                    data.insert(END, '/')
+                    return 'break'
 
-                    if len(entrada) == 1 or len(entrada) == 4:
-                        '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
-                        primeiros, exceto se o caractere for backspace'''
-                        data.insert(END, event.char)
-                        data.insert(END, '/')
-                        return 'break'
-
-            else:
-                # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-                return 'break'
+                if len(entrada) == 1 or len(entrada) == 4:
+                    '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
+                    primeiros, exceto se o caractere for backspace'''
+                    data.insert(END, event.char)
+                    data.insert(END, '/')
+                    return 'break'
 
         else:
             # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
             return 'break'
 
-    def abrir_outra_janela():
-        janela_1.destroy()
-        tela2()
+    else:
+        # Se o caractere não for um número, uma barra, backspace ou uma tecla de seta, não o insere na caixa de texto
+        return 'break'
+
+
+def tela1():
 
     # Criando uma instância da classe Tk
     janela_1 = Tk()
@@ -195,70 +266,32 @@ def tela1():
     largura_atual = janela_1.winfo_width()
     altura_atual = janela_1.winfo_height()
 
-    # Chama a fução que cria o primeiro label
-    cria_label_1(janela_1)
+    cria_label_digitar_dados(janela_1)
 
-    # Chama a função que cria o segundo label
-    cria_label_2(janela_1)
+    cria_label_nome(janela_1)
 
-    # Cria a caixa de texto
-    nome = Entry(janela_1,
-                 width=20)
-    # Caixa de texto do nome
-    nome.pack()
+    nome_text_box(janela_1)
 
     espaco(janela_1)
 
-    # Chama a função que cria o Terceiro label
-    cria_label_3(janela_1)
+    cria_label_email(janela_1)
 
-    # Caixa de texto do email
-    email = Entry(janela_1,
-                  width=20)
-    # Adiciona a caixa de texto à janela
-    email.pack()
+    email_text_box(janela_1)
 
     espaco(janela_1)
 
-    # Chama a função que cria o quarto label
-    cria_label_4(janela_1)
+    cria_label_data(janela_1)
 
-    # Caixa de texto da data
-    data = Entry(janela_1,
-                 width=20)
-    data.pack()
-    data.bind('<Key>',
-              adicionar_barra)
+    data_text_box(janela_1)
 
     espaco(janela_1)
 
-    # Criando um frame para conter os botões, com a cor de fundo desejada
-    frame = Frame(janela_1,
-                  bg='#4c8fde')
-    frame.pack()
-
-    # Adicionando o primeiro botão ao contêiner
-    adicionar = Button(frame,
-                       text="Adicionar",
-                       command=adicionar_dado,
-                       bg='#ffffca',
-                       fg='black')
-    # Coloca o primeiro botão na tela, com um leve espaçamento à direita
-    adicionar.pack(side="left", padx=5)
-
-    # Adicionando o segundo botão ao contêiner
-    botao2 = Button(frame,
-                    text="Ver tabela",
-                    command=lambda: abrir_outra_janela(),
-                    bg='#ffffca',
-                    fg='black')
-    # Coloca o segundo botão na tela, com um leve espaçamento à esquerda
-    botao2.pack(side="left",
-                padx=5)
+    frame_com_botoes(janela_1)
 
     cria_imagem(janela_1, largura_atual, altura_atual)
 
-    # Adiciona o label 1
+    # label que mostra a mensagem de sucesso ou de falha
+    global label_erro
     label_erro = Label(janela_1,
                        bg='#4c8fde',
                        fg='white',
