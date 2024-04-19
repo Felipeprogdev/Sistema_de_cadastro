@@ -53,7 +53,7 @@ def espaco(janela_1):
 
 def cria_label_nome(janela_1):
     label_nome = Label(janela_1,
-                       text='Digite seu nome:',
+                       text='Nome:',
                        bg='#4c8fde',
                        fg='white',
                        font='Arial 20',
@@ -73,7 +73,7 @@ def nome_text_box(janela_1):
 
 def cria_label_email(janela_1):
     label_email = Label(janela_1,
-                        text='Digite seu email:',
+                        text='Email:',
                         bg='#4c8fde',
                         fg='white',
                         font='Arial 20',
@@ -93,7 +93,7 @@ def email_text_box(janela_1):
 
 def cria_label_data(janela_1):
     label_data = Label(janela_1,
-                       text='Digite sua data de nascimento:',
+                       text='Data de nascimento:',
                        bg='#4c8fde',
                        fg='white',
                        font='Arial 20',
@@ -118,15 +118,19 @@ def abrir_outra_janela(janela_1):
 
 # Ocorre quando a pessoa clica no botão de adicionar dados
 def adicionar_dado():
-    mensagem_de_erro = 'Você digitou algo errado'
     try:
-        if nome.get() == '' or email.get() == '':
-            label_erro.config(text=mensagem_de_erro)
+        if nome.get() == '':
+            label_erro.config(text='Nome invalido')
+            return
+
+        # Verificar se "@" está no texto e se termina com ".com"
+        if "@" not in email.get() or not email.get().lower().endswith(".com"):
+            label_erro.config(text='Email invalido')
             return
 
         # Pega valores digitados
         nome_digitado = nome.get().capitalize()
-        email_digitado = email.get()
+        email_digitado = email.get().lower()
         data_digitada = data.get()
         # Converte a string para um objeto datetime
         data_final = datetime.strptime(data_digitada, '%d/%m/%Y')
@@ -139,9 +143,9 @@ def adicionar_dado():
 
         # Atualiza a mensagem do label para 'Adicionado com sucesso'
         label_erro.config(text='Adicionado com sucesso')
-    except ValueError:  # Captura todas as exceções como 'e'
+    except ValueError:
         # Atualiza a mensagem do label para 'Você digitou algo errado'
-        label_erro.config(text=mensagem_de_erro)
+        label_erro.config(text='Data invalida')
 
 
 def frame_com_botoes(janela_1):

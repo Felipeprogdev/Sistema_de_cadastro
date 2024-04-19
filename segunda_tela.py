@@ -72,7 +72,6 @@ def botao_de_voltar(janela_1, frame):
 
 def pesquisar(janela_1, largura_janela, altura_janela):
     tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=True)
-
     # Atualiza o texto do label 'pagina'
     pagina.config(text="1")
 
@@ -292,6 +291,13 @@ def adicionar_barra(event, data_acessada):
         return 'break'
 
 
+def formatar_id(event):
+    value = event.char
+    keysym = event.keysym
+    if not value.isdigit() and keysym not in ["Left", "Right", "Up", "Down", "BackSpace"]:
+        return "break"
+
+
 def pesquisa_id(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
 
     # Calculando as coordenadas x e y para centralizar o botão no frame
@@ -305,6 +311,7 @@ def pesquisa_id(frame, largura_label, altura_label, largura_frame, altura_frame,
                    width=largura_label,
                    height=altura_label
                    )
+    caixa_id.bind('<Key>', formatar_id)
 
 
 def pesquisa_nome(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
@@ -473,6 +480,7 @@ def deletar_dados_pelo_id(janela_1, largura_janela, altura_janela):
 
     id_entry = Entry(frame_deletar)
     id_entry.place(relx=0.5, rely=0.4, anchor='n')  # Ajuste a posição vertical conforme necessário
+    id_entry.bind('<Key>', formatar_id)
 
     Button(frame_deletar,
            text="Deletar",
@@ -490,7 +498,9 @@ def editar_dados(janela_1, largura_janela, altura_janela):
 
     frame_editar = Frame(janela_1,
                          bg='#4c8fde',
-                         borderwidth=1)
+                         borderwidth=1,
+                         highlightbackground="black",
+                         highlightthickness=2)
     frame_editar.place(x=x,
                        y=y,
                        width=largura_frame,
@@ -499,60 +509,76 @@ def editar_dados(janela_1, largura_janela, altura_janela):
     # Adiciona os labels, caixas de texto e botão ao frame
     Label(frame_editar,
           text="Editar dados",
-          bg='#4c8fde').place(relx=0.5, rely=0.1, anchor='center')
+          bg='#4c8fde').place(relx=0.5, rely=0.02, anchor='center')
 
     Label(frame_editar,
-          text="Digite seu Id",
-          bg='#4c8fde').place(relx=0.5, rely=0.2, anchor='center')
+          text="Id",
+          bg='#4c8fde').place(relx=0.5, rely=0.10, anchor='center')
 
     id_text_box = Entry(frame_editar)
-    id_text_box.place(relx=0.5, rely=0.3, anchor='center')
+    id_text_box.place(relx=0.5, rely=0.15, anchor='center')
+    id_text_box.bind('<Key>', formatar_id)
 
     Label(frame_editar,
-          text="Digite seu nome",
-          bg='#4c8fde').place(relx=0.5, rely=0.4, anchor='center')
+          text="Nome",
+          bg='#4c8fde').place(relx=0.5, rely=0.20, anchor='center')
 
     nome_text_box = Entry(frame_editar)
-    nome_text_box.place(relx=0.5, rely=0.5, anchor='center')
+    nome_text_box.place(relx=0.5, rely=0.25, anchor='center')
 
     Label(frame_editar,
-          text="Digite seu email",
-          bg='#4c8fde').place(relx=0.5, rely=0.6, anchor='center')
+          text="Email",
+          bg='#4c8fde').place(relx=0.5, rely=0.30, anchor='center')
 
     email_text_box = Entry(frame_editar)
-    email_text_box.place(relx=0.5, rely=0.7, anchor='center')
+    email_text_box.place(relx=0.5, rely=0.35, anchor='center')
 
     Label(frame_editar,
-          text="Digite a data de nascimento",
-          bg='#4c8fde').place(relx=0.5, rely=0.8, anchor='center')
+          text="Data de nascimento",
+          bg='#4c8fde').place(relx=0.5, rely=0.40, anchor='center')
 
     data_text_box = Entry(frame_editar)
-    data_text_box.place(relx=0.5, rely=0.9, anchor='center')
+    data_text_box.place(relx=0.5, rely=0.45, anchor='center')
     data_text_box.bind('<Key>', lambda event: adicionar_barra(event, data_text_box))
 
     def editar():
-        id_digitado = int(id_text_box.get())
-        nome_digitado = nome_text_box.get().capitalize() if nome_text_box.get().strip() != "" else None
-        email_digitado = email_text_box.get() if email_text_box.get().strip() != "" else None
-        data_digitada = data_text_box.get() if data_text_box.get().strip() != "" else None
-        if data_digitada:
-            # Converte a string para um objeto datetime
-            data_digitada = datetime.strptime(data_digitada, '%d/%m/%Y')
-            # Quando for exibir ou usar, formate para string apenas com a data
-            data_digitada = data_digitada.strftime('%Y-%m-%d')
+        try:
+            id_digitado = int(id_text_box.get())
+            nome_digitado = nome_text_box.get().capitalize() if nome_text_box.get().strip() != "" else None
+            email_digitado = email_text_box.get() if email_text_box.get().strip() != "" else None
+            if email_digitado is not None:
+                # Verificar se "@" está no texto e se termina com ".com"
+                if "@" not in email_digitado or not email_digitado.lower().endswith(".com"):
+                    print('sadasd')
+                    label_erro.config(text='Email invalido')
+                    return
+                else:
+                    email_digitado.lower()
+            data_digitada = data_text_box.get() if data_text_box.get().strip() != "" else None
+            if data_digitada:
+                # Converte a string para um objeto datetime
+                data_digitada = datetime.strptime(data_digitada, '%d/%m/%Y')
+                # Quando for exibir ou usar, formate para string apenas com a data
+                data_digitada = data_digitada.strftime('%Y-%m-%d')
 
-        classe = Banco()
-        classe.editar_dados(id_digitado, nome_digitado, email_digitado, data_digitada)
+            classe = Banco()
+            classe.editar_dados(id_digitado, nome_digitado, email_digitado, data_digitada)
 
-        tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=False)
+            tabela(janela_1, largura_janela, altura_janela, numero=1, resetb=False)
 
-        # Atualiza o texto do label 'pagina'
-        pagina.config(text="1")
+            # Atualiza o texto do label 'pagina'
+            pagina.config(text="1")
+            label_erro.config(text='Editado com sucesso')
+        except ValueError:
+            label_erro.config(text='Data invalida')
 
     Button(frame_editar,
            text="Editar",
            bg='#ffffca',
-           command=editar).place(relx=0.5, rely=1.0, anchor='s')
+           command=editar).place(relx=0.5, rely=0.55, anchor='s')
+
+    label_erro = Label(frame_editar, text="", bg='#4c8fde')
+    label_erro.place(relx=0.5, rely=0.65, anchor='s')
 
 
 def tela2():
