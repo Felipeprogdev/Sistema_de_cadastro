@@ -498,9 +498,7 @@ def editar_dados(janela_1, largura_janela, altura_janela):
 
     frame_editar = Frame(janela_1,
                          bg='#4c8fde',
-                         borderwidth=1,
-                         highlightbackground="black",
-                         highlightthickness=2)
+                         borderwidth=1)
     frame_editar.place(x=x,
                        y=y,
                        width=largura_frame,
