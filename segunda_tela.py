@@ -55,7 +55,7 @@ def botao_de_minimizar(janela_1, frame):
                              command=janela_1.iconify)
 
     botao_minimizar.pack(side="right",
-                         anchor="nw")  # Posiciona o botão no canto superior direito do
+                         anchor="nw")  # Posiciona o botão no canto superior direito do frame
 
 
 def abrir_outra_janela(janela_1):
