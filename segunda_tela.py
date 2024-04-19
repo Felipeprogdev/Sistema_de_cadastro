@@ -361,13 +361,6 @@ def tamanho_da_janela(janela_1):
     janela_1.resizable(False, False)
 
 
-def pagina(frame_paginacao):
-    # Adiciona um label ao frame
-    global pagina
-    pagina = Label(frame_paginacao, text="1", bg='#4c8fde')
-    pagina.place(relx=0.5, rely=0.5, anchor='center')
-
-
 def proxima_pagina(janela_1, largura_janela, altura_janela):
 
     nome_na_caixa_de_texto = formatar_nome()
@@ -427,7 +420,10 @@ def paginacao_da_tabela(janela_1, largura_janela, altura_janela):
                           width=largura_frame,
                           height=altura_frame)
 
-    pagina(frame_paginacao)
+    # Adiciona um label ao frame
+    global pagina
+    pagina = Label(frame_paginacao, text="1", bg='#4c8fde')
+    pagina.place(relx=0.5, rely=0.5, anchor='center')
 
     botao_esquerda = Button(frame_paginacao, text="<", bg='#ffffca',
                             command=lambda: pagina_anterior(janela_1,
