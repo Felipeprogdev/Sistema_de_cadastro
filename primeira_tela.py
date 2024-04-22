@@ -6,7 +6,6 @@ from segunda_tela import tela2
 from formatar_data_digitada import adicionar_barra
 
 
-
 def cor_de_fundo_e_icone(janela_1):
     # Cor de fundo
     janela_1['bg'] = '#4c8fde'
