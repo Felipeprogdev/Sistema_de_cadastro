@@ -3,6 +3,8 @@ from tkinter import ttk
 from banco_de_dados import Banco
 from datetime import datetime
 from main import primeira_tela
+from formatar_data_digitada import adicionar_barra
+from formatar_id_digitado import formatar_id
 
 
 def formatar_nome():
@@ -230,74 +232,6 @@ def tabela(janela_1, largura_janela, altura_janela, numero=0, inicio=0, resetb=F
         ultimo_id_da_tabela = ultimo_id
 
 
-def adicionar_barra(event, data_acessada):
-    if event.keysym in ['Left', 'Right', 'Up', 'Down']:
-        return
-
-    # Verifica se o caractere digitado é um número, uma barra ou backspace
-    elif event.char.isdigit() or event.char == '/' or event.char == '\x08':
-        # Pega valor digitado
-        entrada = data_acessada.get()
-
-        # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
-        if len(entrada) < 10 or event.char == '\x08':
-            # Se for um backspace não adicione a /
-
-            if event.char != '\x08':
-                if len(entrada) == 4 and int(event.char) >= 3:
-                    # Limpa a caixa de texto
-                    data_acessada.delete(0, END)
-                    data_acessada.insert(END, entrada[0])
-                    data_acessada.insert(END, entrada[1])
-                    data_acessada.insert(END, entrada[2])
-                    data_acessada.insert(END, entrada[3])
-                    return 'break'
-
-                if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
-                    # Limpa a caixa de texto
-                    data_acessada.delete(0, END)
-                    # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
-                    data_acessada.insert(END, '0')
-                    data_acessada.insert(END, entrada[0])
-                    data_acessada.insert(END, '/')
-                    data_acessada.insert(END, '0')
-                    data_acessada.insert(END, event.char)
-                    data_acessada.insert(END, '/')
-                    return 'break'
-
-                if (
-                        len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
-                        (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
-                        (event.char) >= 2 and int(event.char) <= 9
-                ):
-                    data_acessada.insert(END, '0')
-                    data_acessada.insert(END, event.char)
-                    data_acessada.insert(END, '/')
-                    return 'break'
-
-                if len(entrada) == 1 or len(entrada) == 4:
-                    '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
-                    primeiros, exceto se o caractere for backspace'''
-                    data_acessada.insert(END, event.char)
-                    data_acessada.insert(END, '/')
-                    return 'break'
-
-        else:
-            # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-            return 'break'
-
-    else:
-        # Se o caractere não for um número, uma barra, backspace ou uma tecla de seta, não o insere na caixa de texto
-        return 'break'
-
-
-def formatar_id(event):
-    value = event.char
-    keysym = event.keysym
-    if not value.isdigit() and keysym not in ["Left", "Right", "Up", "Down", "BackSpace"]:
-        return "break"
-
-
 def pesquisa_id(frame, largura_label, altura_label, largura_frame, altura_frame, largura_botao, altura_botao):
 
     # Calculando as coordenadas x e y para centralizar o botão no frame
@@ -351,7 +285,7 @@ def pesquisa_data(frame, largura_label, altura_label, largura_frame, altura_fram
                y=y_data,
                width=largura_label,
                height=altura_label)
-    data.bind('<Key>', lambda event: adicionar_barra(event, data))
+    data.bind('<Key>', lambda event: adicionar_barra(event, data, END))
 
 
 def cor_de_fundo_e_icone(janela_1):
@@ -537,7 +471,7 @@ def editar_dados(janela_1, largura_janela, altura_janela):
 
     data_text_box = Entry(frame_editar)
     data_text_box.place(relx=0.5, rely=0.45, anchor='center')
-    data_text_box.bind('<Key>', lambda event: adicionar_barra(event, data_text_box))
+    data_text_box.bind('<Key>', lambda event: adicionar_barra(event, data_text_box, END))
 
     def editar():
         try:

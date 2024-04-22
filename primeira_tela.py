@@ -3,6 +3,8 @@ from banco_de_dados import Banco
 from datetime import datetime
 from PIL import Image, ImageTk
 from segunda_tela import tela2
+from formatar_data_digitada import adicionar_barra
+
 
 
 def cor_de_fundo_e_icone(janela_1):
@@ -108,7 +110,7 @@ def data_text_box(janela_1):
     data = Entry(janela_1,
                  width=20)
     data.pack()
-    data.bind('<Key>', lambda event: adicionar_barra(event))
+    data.bind('<Key>', lambda event: adicionar_barra(event, data, END))
 
 
 def abrir_outra_janela(janela_1):
@@ -191,68 +193,6 @@ def cria_imagem(janela_1, largura_atual, altura_atual):
 
     # Posiciona o rótulo na janela
     rotulo.pack()
-
-
-# Formatar a data de nascimento digitada
-def adicionar_barra(event):
-    if event.keysym in ['Left', 'Right', 'Up', 'Down']:
-        return
-
-    # Verifica se o caractere digitado é um número, uma barra ou backspace
-    elif event.char.isdigit() or event.char == '/' or event.char == '\x08':
-        # Pega valor digitado
-        entrada = data.get()
-
-        # Verifica se já foram digitados 10 caracteres ou se foi digitado um backspace
-        if len(entrada) < 10 or event.char == '\x08':
-            # Se for um backspace não adicione a /
-
-            if event.char != '\x08':
-                if len(entrada) == 4 and int(event.char) >= 3:
-                    # Limpa a caixa de texto
-                    data.delete(0, END)
-                    data.insert(END, entrada[0])
-                    data.insert(END, entrada[1])
-                    data.insert(END, entrada[2])
-                    data.insert(END, entrada[3])
-                    return 'break'
-
-                if len(entrada) == 1 and int(entrada[0]) == 3 and int(event.char) >= 2:
-                    # Limpa a caixa de texto
-                    data.delete(0, END)
-                    # Insere '0', o antigo índice 0, '/', '0' e o caractere digitado
-                    data.insert(END, '0')
-                    data.insert(END, entrada[0])
-                    data.insert(END, '/')
-                    data.insert(END, '0')
-                    data.insert(END, event.char)
-                    data.insert(END, '/')
-                    return 'break'
-
-                if (
-                        len(entrada) == 0 and event.char.isdigit() and int(event.char) >= 4 and int
-                        (event.char) <= 9 or len(entrada) == 3 and event.char.isdigit() and int
-                        (event.char) >= 2 and int(event.char) <= 9
-                ):
-                    data.insert(END, '0')
-                    data.insert(END, event.char)
-                    data.insert(END, '/')
-                    return 'break'
-
-                if len(entrada) == 1 or len(entrada) == 4:
-                    '''Insere uma barra após os dois primeiros caracteres ou após os cinco 
-                    primeiros, exceto se o caractere for backspace'''
-                    data.insert(END, event.char)
-                    data.insert(END, '/')
-                    return 'break'
-
-        else:
-            # Se o caractere não for um número, uma barra ou backspace, não o insere na caixa de texto
-            return 'break'
-
-    else:
-        # Se o caractere não for um número, uma barra, backspace ou uma tecla de seta, não o insere na caixa de texto
-        return 'break'
 
 
 def tela1():
