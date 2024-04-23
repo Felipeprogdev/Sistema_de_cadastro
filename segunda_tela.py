@@ -314,22 +314,19 @@ def proxima_pagina(janela_1, largura_janela, altura_janela):
     ultimo_id = classe.obter_ultimo_id(nome=nome_na_caixa_de_texto,
                                        email=email_na_caixa_de_texto, data=data_na_caixa_de_texto)
 
-    try:
-        if ultimo_id is None or int(ultimo_id_da_tabela) == int(ultimo_id):
-            pass
-
-        else:
-
-            numero_pagina = int(pagina.cget('text'))
-
-            tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetb=True)
-
-            numero_pagina += 1
-
-            # Altera o texto do label
-            pagina.config(text=str(numero_pagina))
-    except ValueError:
+    if ultimo_id is None or int(ultimo_id_da_tabela) == int(ultimo_id):
         pass
+
+    else:
+
+        numero_pagina = int(pagina.cget('text'))
+
+        tabela(janela_1, largura_janela, altura_janela, numero=1, inicio=numero_pagina, resetb=True)
+
+        numero_pagina += 1
+
+        # Altera o texto do label
+        pagina.config(text=str(numero_pagina))
 
 
 def pagina_anterior(janela_1, largura_janela, altura_janela):
