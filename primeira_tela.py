@@ -145,7 +145,6 @@ def adicionar_dado():
         # Atualiza a mensagem do label para 'Adicionado com sucesso'
         label_erro.config(text='Adicionado com sucesso')
     except ValueError:
-        # Atualiza a mensagem do label para 'Você digitou algo errado'
         label_erro.config(text='Data invalida')
 
 
