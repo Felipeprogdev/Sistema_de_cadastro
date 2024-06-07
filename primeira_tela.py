@@ -113,8 +113,8 @@ def data_text_box(janela_1):
 
 
 def abrir_outra_janela(janela_1):
-    janela_1.destroy()
-    tela2()
+    janela_1.withdraw()
+    tela2(janela_1)
 
 
 # Ocorre quando a pessoa clica no botão de adicionar dados

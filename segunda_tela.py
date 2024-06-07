@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from banco_de_dados import Banco
 from datetime import datetime
-from main import primeira_tela
 from formatar_data_digitada import adicionar_barra
 from formatar_id_digitado import formatar_id
 
@@ -60,15 +59,16 @@ def botao_de_minimizar(janela_1, frame):
                          anchor="nw")  # Posiciona o botão no canto superior direito do frame
 
 
-def abrir_outra_janela(janela_1):
+def abrir_outra_janela(janela_1, janela_anterior):
     janela_1.destroy()
-    primeira_tela.tela1()
+    janela_anterior.deiconify()  # Traz a janela anterior de volta
 
 
-def botao_de_voltar(janela_1, frame):
+def botao_de_voltar(janela_1, janela_anterior, frame):
     botao_voltar = Button(frame,
                           text="Voltar",
-                          command=lambda: abrir_outra_janela(janela_1))  # Passando janela_1 como argumento
+                          command=lambda:
+                          abrir_outra_janela(janela_1, janela_anterior))  # Passando janela_1 como argumento
     botao_voltar.pack(side="left", anchor="nw")
 
 
@@ -97,7 +97,7 @@ def botao_de_pesquisar(frame, janela_1, largura_frame,
                             height=altura_botao)
 
 
-def frame_de_pesquisa(janela_1, largura_janela, altura_janela):
+def frame_de_pesquisa(janela_1, janela_anterior, largura_janela, altura_janela):
     largura_frame = largura_janela * 1  # 100% da largura da janela
     altura_frame = altura_janela * 0.2  # 20% da altura da janela
 
@@ -116,7 +116,7 @@ def frame_de_pesquisa(janela_1, largura_janela, altura_janela):
 
     botao_de_minimizar(janela_1, frame)
 
-    botao_de_voltar(janela_1, frame)
+    botao_de_voltar(janela_1, janela_anterior,  frame)
 
     # Definindo a largura e a altura do botão como uma porcentagem da largura e altura do frame
     largura_botao = largura_frame * 0.1  # 10% da largura do frame
@@ -513,7 +513,7 @@ def editar_dados(janela_1, largura_janela, altura_janela):
     label_erro.place(relx=0.5, rely=0.65, anchor='s')
 
 
-def tela2():
+def tela2(janela_anterior):
     # Criando uma instância da classe Tk
     janela_1 = Tk()
     # Titulo da janela
@@ -527,7 +527,7 @@ def tela2():
     largura_janela = janela_1.winfo_screenwidth()
     altura_janela = janela_1.winfo_screenheight()
 
-    frame_de_pesquisa(janela_1, largura_janela, altura_janela)
+    frame_de_pesquisa(janela_1, janela_anterior, largura_janela, altura_janela)
 
     tabela(janela_1, largura_janela, altura_janela, numero=1)
 
@@ -544,4 +544,4 @@ def tela2():
 
 
 if __name__ == '__main__':
-    tela2()
+    pass
